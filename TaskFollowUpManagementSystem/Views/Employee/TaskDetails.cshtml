@@ -1,0 +1,153 @@
+@model TaskDetailsViewModel
+@{
+    ViewData["Title"] = "Task Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-info-circle"></i> Task Details</h2>
+    <div>
+        <a asp-action="UpdateStatus" asp-route-id="@Model.TaskId" class="btn btn-outline-success"><i class="bi bi-pencil-square"></i> Update Status</a>
+        <a asp-action="MyTasks" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">@Model.Title</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Assigned By:</strong> @Model.AssignedByName
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Assigned To:</strong> @Model.AssignedToName
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Start Date:</strong> @Model.StartDate.ToString("MMM dd, yyyy")
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Due Date:</strong> @Model.DueDate.ToString("MMM dd, yyyy")
+                        @if (Model.IsOverdue)
+                        {
+                            <span class="badge bg-danger ms-1">Overdue</span>
+                        }
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Duration:</strong> @(Model.ExpectedDuration ?? "N/A")
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Priority:</strong>
+                        @{
+                            var priorityBadge = Model.Priority switch
+                            {
+                                PriorityLevel.Low => "bg-secondary",
+                                PriorityLevel.Medium => "bg-info",
+                                PriorityLevel.High => "bg-warning text-dark",
+                                PriorityLevel.Critical => "bg-danger",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @priorityBadge">@Model.Priority</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Status:</strong>
+                        @{
+                            var statusBadge = Model.Status switch
+                            {
+                                TaskStatusEnum.New => "bg-secondary",
+                                TaskStatusEnum.Assigned => "bg-primary",
+                                TaskStatusEnum.InProgress => "bg-info",
+                                TaskStatusEnum.PendingReview => "bg-warning text-dark",
+                                TaskStatusEnum.Overdue => "bg-danger",
+                                TaskStatusEnum.Completed => "bg-success",
+                                TaskStatusEnum.Closed => "bg-dark",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @statusBadge">@Model.Status</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Updated:</strong> @Model.UpdatedAt.ToString("MMM dd, yyyy HH:mm")
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="mb-3">
+                        <strong>Description:</strong>
+                        <p class="mt-1">@Model.Description</p>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ProgressNote))
+                {
+                    <div class="mb-3">
+                        <strong>Progress Note:</strong>
+                        <p class="mt-1 text-muted">@Model.ProgressNote</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a asp-action="UpdateStatus" asp-route-id="@Model.TaskId" class="btn btn-success w-100 mb-2">
+                    <i class="bi bi-pencil-square"></i> Update Status
+                </a>
+                <a asp-action="FollowUps" class="btn btn-outline-info w-100">
+                    <i class="bi bi-chat-dots"></i> View Follow-Ups
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Follow-Ups Section -->
+<div class="card shadow mt-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Follow-Up History (@Model.FollowUps.Count)</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.FollowUps.Any())
+        {
+            @foreach (var followUp in Model.FollowUps)
+            {
+                <div class="border rounded p-3 mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong><i class="bi bi-person-badge"></i> @followUp.ManagerName</strong>
+                        <small class="text-muted">@followUp.FollowUpDate.ToString("MMM dd, yyyy")</small>
+                    </div>
+                    <p class="mb-2">@followUp.Note</p>
+                    @if (!string.IsNullOrEmpty(followUp.EmployeeResponse))
+                    {
+                        <div class="bg-light rounded p-2 ms-3">
+                            <small class="text-success fw-bold"><i class="bi bi-reply"></i> Your Response:</small>
+                            <p class="mb-0 small">@followUp.EmployeeResponse</p>
+                            <small class="text-muted">@followUp.ResponseDate?.ToString("MMM dd, yyyy HH:mm")</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-action="RespondFollowUp" asp-route-id="@followUp.FollowUpId" class="btn btn-sm btn-primary">
+                            <i class="bi bi-reply"></i> Respond
+                        </a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted text-center">No follow-ups yet.</p>
+        }
+    </div>
+</div>

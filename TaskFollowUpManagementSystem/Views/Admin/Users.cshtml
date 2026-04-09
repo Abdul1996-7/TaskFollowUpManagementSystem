@@ -1,0 +1,60 @@
+@model List<UserListViewModel>
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-people"></i> User Management</h2>
+    <a asp-action="CreateUser" class="btn btn-primary"><i class="bi bi-person-plus"></i> Create User</a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td><strong>@user.FullName</strong></td>
+                            <td>@user.Email</td>
+                            <td>@(user.Department ?? "N/A")</td>
+                            <td>
+                                @{
+                                    var roleBadge = user.Role switch
+                                    {
+                                        "Admin" => "bg-danger",
+                                        "Manager" => "bg-primary",
+                                        "Employee" => "bg-success",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @roleBadge">@user.Role</span>
+                            </td>
+                            <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                <a asp-action="AssignRole" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary" title="Assign Role">
+                                    <i class="bi bi-person-gear"></i>
+                                </a>
+                                <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

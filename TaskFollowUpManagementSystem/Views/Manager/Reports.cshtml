@@ -1,0 +1,174 @@
+@model ManagerDashboardViewModel
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2 class="mb-4"><i class="bi bi-bar-chart"></i> Reports & Analytics</h2>
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-primary shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-primary">@Model.TotalTasks</h2>
+                <p class="text-muted mb-0">Total Tasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-success shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-success">@Model.CompletedTasks</h2>
+                <p class="text-muted mb-0">Completed</p>
+                @if (Model.TotalTasks > 0)
+                {
+                    <div class="progress mt-2" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: @((Model.CompletedTasks * 100 / Model.TotalTasks))%"></div>
+                    </div>
+                    <small class="text-muted">@((Model.CompletedTasks * 100 / Model.TotalTasks))% completion rate</small>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-info shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-info">@Model.InProgressTasks</h2>
+                <p class="text-muted mb-0">In Progress</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-danger shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-danger">@Model.OverdueTasks</h2>
+                <p class="text-muted mb-0">Overdue</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Task Distribution Chart -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Task Status Distribution</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.TotalTasks > 0)
+                {
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Completed</span>
+                            <span>@Model.CompletedTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: @((Model.CompletedTasks * 100 / Model.TotalTasks))%">
+                                @((Model.CompletedTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>In Progress</span>
+                            <span>@Model.InProgressTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-info" style="width: @((Model.InProgressTasks * 100 / Model.TotalTasks))%">
+                                @((Model.InProgressTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Overdue</span>
+                            <span>@Model.OverdueTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-danger" style="width: @((Model.OverdueTasks * 100 / Model.TotalTasks))%">
+                                @((Model.OverdueTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>New / Assigned</span>
+                            <span>@Model.NewTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-warning" style="width: @((Model.NewTasks * 100 / Model.TotalTasks))%">
+                                @((Model.NewTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Pending Review</span>
+                            <span>@Model.PendingReviewTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-secondary" style="width: @((Model.PendingReviewTasks * 100 / Model.TotalTasks))%">
+                                @((Model.PendingReviewTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center">No tasks to display.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-people"></i> Employee Performance</h5>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.TasksByEmployee.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Employee</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Completed</th>
+                                    <th class="text-center">In Progress</th>
+                                    <th class="text-center">Overdue</th>
+                                    <th class="text-center">Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var emp in Model.TasksByEmployee)
+                                {
+                                    var completionRate = emp.TotalTasks > 0 ? (emp.CompletedTasks * 100 / emp.TotalTasks) : 0;
+                                    <tr>
+                                        <td><strong>@emp.EmployeeName</strong></td>
+                                        <td class="text-center">@emp.TotalTasks</td>
+                                        <td class="text-center"><span class="badge bg-success">@emp.CompletedTasks</span></td>
+                                        <td class="text-center"><span class="badge bg-info">@emp.InProgressTasks</span></td>
+                                        <td class="text-center"><span class="badge bg-danger">@emp.OverdueTasks</span></td>
+                                        <td class="text-center">
+                                            <div class="progress" style="height: 10px; min-width: 60px;">
+                                                <div class="progress-bar bg-success" style="width: @completionRate%"></div>
+                                            </div>
+                                            <small>@completionRate%</small>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center p-3">No employee data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

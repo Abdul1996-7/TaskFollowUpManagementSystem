@@ -1,0 +1,46 @@
+@model AssignRoleViewModel
+@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<h2 class="mb-4"><i class="bi bi-person-gear"></i> Assign Role</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <strong>User:</strong> @Model.FullName<br />
+                    <strong>Email:</strong> @Model.Email<br />
+                    <strong>Current Role:</strong> <span class="badge bg-secondary">@Model.CurrentRole</span>
+                </div>
+                <hr />
+                <form asp-action="AssignRole" method="post">
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="FullName" />
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="CurrentRole" />
+
+                    <div class="mb-3">
+                        <label asp-for="NewRole" class="form-label">New Role</label>
+                        <select asp-for="NewRole" class="form-select">
+                            <option value="Admin" selected="@(Model.CurrentRole == "Admin")">Admin</option>
+                            <option value="Manager" selected="@(Model.CurrentRole == "Manager")">Manager</option>
+                            <option value="Employee" selected="@(Model.CurrentRole == "Employee")">Employee</option>
+                        </select>
+                        <span asp-validation-for="NewRole" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Update Role</button>
+                        <a asp-action="Users" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

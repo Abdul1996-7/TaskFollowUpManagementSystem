@@ -1,0 +1,128 @@
+@model EmployeeDashboardViewModel
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> My Dashboard</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-list-task" style="font-size: 2.5rem;"></i>
+                <h3 class="mt-2">@Model.AssignedTasks</h3>
+                <p class="mb-0">Active Tasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-chat-dots" style="font-size: 2.5rem;"></i>
+                <h3 class="mt-2">@Model.PendingFollowUps</h3>
+                <p class="mb-0">Pending Follow-Ups</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-check-circle" style="font-size: 2.5rem;"></i>
+                <h3 class="mt-2">@Model.CompletedTasks</h3>
+                <p class="mb-0">Completed Tasks</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock"></i> Upcoming Deadlines</h5>
+                <a asp-action="MyTasks" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.UpcomingDeadlines.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var deadline in Model.UpcomingDeadlines)
+                        {
+                            <a asp-action="TaskDetails" asp-route-id="@deadline.TaskId" class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@deadline.Title</strong><br />
+                                        <small class="text-muted">Due: @deadline.DueDate.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                    <div>
+                                        @if (deadline.DaysRemaining <= 1)
+                                        {
+                                            <span class="badge bg-danger">@deadline.DaysRemaining day(s)</span>
+                                        }
+                                        else if (deadline.DaysRemaining <= 3)
+                                        {
+                                            <span class="badge bg-warning text-dark">@deadline.DaysRemaining days</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info">@deadline.DaysRemaining days</span>
+                                        }
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center p-3">No upcoming deadlines.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-list-task"></i> Recent Tasks</h5>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecentTasks.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var task in Model.RecentTasks)
+                        {
+                            <a asp-action="TaskDetails" asp-route-id="@task.TaskId" class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@task.Title</strong>
+                                    </div>
+                                    <div>
+                                        @{
+                                            var statusBadge = task.Status switch
+                                            {
+                                                TaskStatusEnum.New => "bg-secondary",
+                                                TaskStatusEnum.Assigned => "bg-primary",
+                                                TaskStatusEnum.InProgress => "bg-info",
+                                                TaskStatusEnum.PendingReview => "bg-warning text-dark",
+                                                TaskStatusEnum.Overdue => "bg-danger",
+                                                TaskStatusEnum.Completed => "bg-success",
+                                                TaskStatusEnum.Closed => "bg-dark",
+                                                _ => "bg-secondary"
+                                            };
+                                        }
+                                        <span class="badge @statusBadge">@task.Status</span>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center p-3">No tasks assigned yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
