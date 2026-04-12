@@ -1,0 +1,67 @@
+@model UpdateTaskStatusViewModel
+@{
+    ViewData["Title"] = "تحديث حالة المهمة";
+}
+
+<div class="page-header">
+    <h2><i class="bi bi-pencil-square"></i> تحديث حالة المهمة</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <div class="alert alert-info">
+                    <strong>المهمة:</strong> @Model.Title<br />
+                    <strong>الحالة الحالية:</strong>
+                    @{
+                        var currentBadge = Model.CurrentStatus switch
+                        {
+                            TaskStatusEnum.New => "bg-secondary",
+                            TaskStatusEnum.Assigned => "bg-primary",
+                            TaskStatusEnum.InProgress => "bg-info",
+                            TaskStatusEnum.PendingReview => "bg-warning text-dark",
+                            TaskStatusEnum.Overdue => "bg-danger",
+                            TaskStatusEnum.Completed => "bg-success",
+                            TaskStatusEnum.Closed => "bg-dark",
+                            _ => "bg-secondary"
+                        };
+                    }
+                    <span class="badge @currentBadge">@Model.CurrentStatus</span>
+                </div>
+
+                <form asp-action="UpdateStatus" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="TaskId" />
+                    <input type="hidden" asp-for="Title" />
+                    <input type="hidden" asp-for="CurrentStatus" />
+
+                    <div class="mb-3">
+                        <label asp-for="NewStatus" class="form-label">الحالة الجديدة</label>
+                        <select asp-for="NewStatus" class="form-select">
+                            <option value="@((int)TaskStatusEnum.InProgress)">قيد التنفيذ</option>
+                            <option value="@((int)TaskStatusEnum.PendingReview)">بانتظار المراجعة</option>
+                            <option value="@((int)TaskStatusEnum.Completed)">مكتملة</option>
+                        </select>
+                        <span asp-validation-for="NewStatus" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProgressNote" class="form-label">ملاحظات التقدم</label>
+                        <textarea asp-for="ProgressNote" class="form-control" rows="4" placeholder="أضف ملاحظة حول تقدم العمل..."></textarea>
+                        <span asp-validation-for="ProgressNote" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> تحديث الحالة</button>
+                        <a asp-action="TaskDetails" asp-route-id="@Model.TaskId" class="btn btn-outline-secondary">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,180 @@
+@model TaskDetailsViewModel
+@{
+    ViewData["Title"] = "تفاصيل المهمة";
+}
+
+<div class="page-header">
+    <h2><i class="bi bi-info-circle"></i> تفاصيل المهمة</h2>
+    <div>
+        <a asp-action="EditTask" asp-route-id="@Model.TaskId" class="btn btn-outline-primary"><i class="bi bi-pencil"></i> تعديل</a>
+        <a asp-action="AddFollowUp" asp-route-taskId="@Model.TaskId" class="btn btn-outline-info"><i class="bi bi-chat-dots"></i> إضافة متابعة</a>
+        <a asp-action="Tasks" class="btn btn-outline-secondary"><i class="bi bi-arrow-right"></i> رجوع</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">@Model.Title</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="info-row">
+                            <span class="info-label">أسندت بواسطة:</span>
+                            <span class="info-value">@Model.AssignedByName</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-row">
+                            <span class="info-label">مسندة إلى:</span>
+                            <span class="info-value">@Model.AssignedToName</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="info-row">
+                            <span class="info-label">تاريخ البداية:</span>
+                            <span class="info-value">@Model.StartDate.ToString("yyyy/MM/dd")</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-row">
+                            <span class="info-label">تاريخ الاستحقاق:</span>
+                            <span class="info-value">
+                                @Model.DueDate.ToString("yyyy/MM/dd")
+                                @if (Model.IsOverdue)
+                                {
+                                    <span class="badge bg-danger">متأخرة</span>
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-row">
+                            <span class="info-label">المدة المتوقعة:</span>
+                            <span class="info-value">@(Model.ExpectedDuration ?? "غير محدد")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="info-row">
+                            <span class="info-label">الأولوية:</span>
+                            <span class="info-value">
+                                @{
+                                    var priorityBadge = Model.Priority switch
+                                    {
+                                        PriorityLevel.Low => "bg-secondary",
+                                        PriorityLevel.Medium => "bg-info",
+                                        PriorityLevel.High => "bg-warning text-dark",
+                                        PriorityLevel.Critical => "bg-danger",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @priorityBadge">@Model.Priority</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-row">
+                            <span class="info-label">الحالة:</span>
+                            <span class="info-value">
+                                @{
+                                    var statusBadge = Model.Status switch
+                                    {
+                                        TaskStatusEnum.New => "bg-secondary",
+                                        TaskStatusEnum.Assigned => "bg-primary",
+                                        TaskStatusEnum.InProgress => "bg-info",
+                                        TaskStatusEnum.PendingReview => "bg-warning text-dark",
+                                        TaskStatusEnum.Overdue => "bg-danger",
+                                        TaskStatusEnum.Completed => "bg-success",
+                                        TaskStatusEnum.Closed => "bg-dark",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @statusBadge">@Model.Status</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-row">
+                            <span class="info-label">آخر تحديث:</span>
+                            <span class="info-value">@Model.UpdatedAt.ToString("yyyy/MM/dd HH:mm")</span>
+                        </div>
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="mb-3">
+                        <strong>الوصف:</strong>
+                        <p class="mt-1">@Model.Description</p>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.ProgressNote))
+                {
+                    <div class="mb-3">
+                        <strong>ملاحظات التقدم:</strong>
+                        <p class="mt-1 text-muted">@Model.ProgressNote</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> الجدول الزمني</h5>
+            </div>
+            <div class="card-body">
+                <p><small class="text-muted">تاريخ الإنشاء: @Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</small></p>
+                <p><small class="text-muted">آخر تحديث: @Model.UpdatedAt.ToString("yyyy/MM/dd HH:mm")</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- قسم المتابعات -->
+<div class="card shadow mt-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-chat-dots"></i> سجل المتابعات (@Model.FollowUps.Count)</h5>
+        <a asp-action="AddFollowUp" asp-route-taskId="@Model.TaskId" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> إضافة</a>
+    </div>
+    <div class="card-body">
+        @if (Model.FollowUps.Any())
+        {
+            @foreach (var followUp in Model.FollowUps)
+            {
+                <div class="followup-thread">
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong><i class="bi bi-person-badge"></i> @followUp.ManagerName</strong>
+                        <small class="text-muted">@followUp.FollowUpDate.ToString("yyyy/MM/dd")</small>
+                    </div>
+                    <p class="mb-2">@followUp.Note</p>
+                    @if (!string.IsNullOrEmpty(followUp.EmployeeResponse))
+                    {
+                        <div class="followup-response">
+                            <small class="text-success fw-bold"><i class="bi bi-reply"></i> رد الموظف:</small>
+                            <p class="mb-0 small">@followUp.EmployeeResponse</p>
+                            <small class="text-muted">@followUp.ResponseDate?.ToString("yyyy/MM/dd HH:mm")</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> بانتظار الرد</span>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-icon"><i class="bi bi-chat-dots"></i></div>
+                <div class="empty-title">لا توجد متابعات بعد</div>
+            </div>
+        }
+    </div>
+</div>

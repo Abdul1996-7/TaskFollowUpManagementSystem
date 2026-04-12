@@ -1,0 +1,84 @@
+@model List<UserListViewModel>
+@{
+    ViewData["Title"] = "إدارة المستخدمين";
+}
+
+<div class="page-header">
+    <h2><i class="bi bi-people"></i> إدارة المستخدمين</h2>
+    <a asp-action="CreateUser" class="btn btn-primary"><i class="bi bi-person-plus"></i> إنشاء مستخدم</a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>الاسم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>القسم</th>
+                        <th>الدور</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td><strong>@user.FullName</strong></td>
+                                <td>@user.Email</td>
+                                <td>@(user.Department ?? "غير محدد")</td>
+                                <td>
+                                    @{
+                                        var roleBadge = user.Role switch
+                                        {
+                                            "Admin" => "bg-danger",
+                                            "Manager" => "bg-primary",
+                                            "Employee" => "bg-success",
+                                            _ => "bg-secondary"
+                                        };
+                                        var roleAr = user.Role switch
+                                        {
+                                            "Admin" => "مدير النظام",
+                                            "Manager" => "مدير",
+                                            "Employee" => "موظف",
+                                            _ => user.Role
+                                        };
+                                    }
+                                    <span class="badge @roleBadge">@roleAr</span>
+                                </td>
+                                <td>@user.CreatedAt.ToString("yyyy/MM/dd")</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="AssignRole" asp-route-id="@user.Id" class="btn btn-outline-primary" title="تعيين دور">
+                                            <i class="bi bi-person-gear"></i>
+                                        </a>
+                                        <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post" class="d-inline"
+                                              onsubmit="return confirm('هل أنت متأكد من حذف هذا المستخدم؟');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div class="empty-icon"><i class="bi bi-people"></i></div>
+                                    <div class="empty-title">لا يوجد مستخدمون</div>
+                                    <div class="empty-text">لم يتم إضافة أي مستخدمين بعد</div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

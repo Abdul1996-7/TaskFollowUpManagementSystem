@@ -1,0 +1,182 @@
+@model ManagerDashboardViewModel
+@{
+    ViewData["Title"] = "التقارير";
+}
+
+<div class="page-header">
+    <h2><i class="bi bi-bar-chart"></i> التقارير والتحليلات</h2>
+</div>
+
+<!-- بطاقات الملخص -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-primary shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-primary">@Model.TotalTasks</h2>
+                <p class="text-muted mb-0">إجمالي المهام</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-success shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-success">@Model.CompletedTasks</h2>
+                <p class="text-muted mb-0">مكتملة</p>
+                @if (Model.TotalTasks > 0)
+                {
+                    <div class="progress mt-2" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: @((Model.CompletedTasks * 100 / Model.TotalTasks))%"></div>
+                    </div>
+                    <small class="text-muted">نسبة الإنجاز @((Model.CompletedTasks * 100 / Model.TotalTasks))%</small>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-info shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-info">@Model.InProgressTasks</h2>
+                <p class="text-muted mb-0">قيد التنفيذ</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-danger shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="text-danger">@Model.OverdueTasks</h2>
+                <p class="text-muted mb-0">متأخرة</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- توزيع حالات المهام -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-pie-chart"></i> توزيع حالات المهام</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.TotalTasks > 0)
+                {
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>مكتملة</span>
+                            <span>@Model.CompletedTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: @((Model.CompletedTasks * 100 / Model.TotalTasks))%">
+                                @((Model.CompletedTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>قيد التنفيذ</span>
+                            <span>@Model.InProgressTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-info" style="width: @((Model.InProgressTasks * 100 / Model.TotalTasks))%">
+                                @((Model.InProgressTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>متأخرة</span>
+                            <span>@Model.OverdueTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-danger" style="width: @((Model.OverdueTasks * 100 / Model.TotalTasks))%">
+                                @((Model.OverdueTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>جديدة / معيّنة</span>
+                            <span>@Model.NewTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-warning" style="width: @((Model.NewTasks * 100 / Model.TotalTasks))%">
+                                @((Model.NewTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>بانتظار المراجعة</span>
+                            <span>@Model.PendingReviewTasks</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-secondary" style="width: @((Model.PendingReviewTasks * 100 / Model.TotalTasks))%">
+                                @((Model.PendingReviewTasks * 100 / Model.TotalTasks))%
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="bi bi-pie-chart"></i></div>
+                        <div class="empty-title">لا توجد مهام لعرضها</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-people"></i> أداء الموظفين</h5>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.TasksByEmployee.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>الموظف</th>
+                                    <th class="text-center">الإجمالي</th>
+                                    <th class="text-center">مكتملة</th>
+                                    <th class="text-center">نشطة</th>
+                                    <th class="text-center">متأخرة</th>
+                                    <th class="text-center">النسبة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var emp in Model.TasksByEmployee)
+                                {
+                                    var completionRate = emp.TotalTasks > 0 ? (emp.CompletedTasks * 100 / emp.TotalTasks) : 0;
+                                    <tr>
+                                        <td><strong>@emp.EmployeeName</strong></td>
+                                        <td class="text-center">@emp.TotalTasks</td>
+                                        <td class="text-center"><span class="badge bg-success">@emp.CompletedTasks</span></td>
+                                        <td class="text-center"><span class="badge bg-info">@emp.InProgressTasks</span></td>
+                                        <td class="text-center"><span class="badge bg-danger">@emp.OverdueTasks</span></td>
+                                        <td class="text-center">
+                                            <div class="progress" style="height: 10px; min-width: 60px;">
+                                                <div class="progress-bar bg-success" style="width: @completionRate%"></div>
+                                            </div>
+                                            <small>@completionRate%</small>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="bi bi-people"></i></div>
+                        <div class="empty-title">لا توجد بيانات موظفين</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

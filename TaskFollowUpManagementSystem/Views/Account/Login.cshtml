@@ -1,0 +1,56 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card auth-card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <i class="bi bi-box-arrow-in-left"></i>
+                <h4>تسجيل الدخول</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">البريد الإلكتروني</label>
+                        <input asp-for="Email" class="form-control" placeholder="أدخل بريدك الإلكتروني" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">كلمة المرور</label>
+                        <input asp-for="Password" class="form-control" placeholder="أدخل كلمة المرور" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">تذكرني</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-left"></i> دخول</button>
+                </form>
+
+                <hr />
+                <div class="text-center">
+                    <p class="mb-1">ليس لديك حساب؟</p>
+                    <a asp-action="Register" class="btn btn-outline-secondary btn-sm">إنشاء حساب جديد</a>
+                </div>
+
+                <div class="mt-3 demo-box">
+                    <strong>حسابات تجريبية:</strong><br />
+                    مدير النظام: admin&#64;taskmanager.com / Admin&#64;123<br />
+                    مدير: manager&#64;taskmanager.com / Manager&#64;123<br />
+                    موظف: employee1&#64;taskmanager.com / Employee&#64;123
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
