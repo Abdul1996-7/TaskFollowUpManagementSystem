@@ -1,9 +1,11 @@
 @model CreateTaskViewModel
 @{
-    ViewData["Title"] = "Create Task";
+    ViewData["Title"] = "إنشاء مهمة";
 }
 
-<h2 class="mb-4"><i class="bi bi-plus-circle"></i> Create New Task</h2>
+<div class="page-header">
+    <h2><i class="bi bi-plus-circle"></i> إنشاء مهمة جديدة</h2>
+</div>
 
 <div class="row">
     <div class="col-md-8">
@@ -13,59 +15,59 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Title" class="form-label"></label>
-                        <input asp-for="Title" class="form-control" />
+                        <label asp-for="Title" class="form-label">العنوان</label>
+                        <input asp-for="Title" class="form-control" placeholder="أدخل عنوان المهمة" />
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Description" class="form-label"></label>
-                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <label asp-for="Description" class="form-label">الوصف</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="أدخل وصف المهمة"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="AssignedToId" class="form-label"></label>
+                        <label asp-for="AssignedToId" class="form-label">مسندة إلى</label>
                         <select asp-for="AssignedToId" class="form-select" asp-items="@((IEnumerable<SelectListItem>)ViewBag.Employees)">
-                            <option value="">-- Select Employee --</option>
+                            <option value="">-- اختر الموظف --</option>
                         </select>
                         <span asp-validation-for="AssignedToId" class="text-danger"></span>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label asp-for="StartDate" class="form-label"></label>
+                            <label asp-for="StartDate" class="form-label">تاريخ البداية</label>
                             <input asp-for="StartDate" type="date" class="form-control" />
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label asp-for="DueDate" class="form-label"></label>
+                            <label asp-for="DueDate" class="form-label">تاريخ الاستحقاق</label>
                             <input asp-for="DueDate" type="date" class="form-control" />
                             <span asp-validation-for="DueDate" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label asp-for="ExpectedDuration" class="form-label"></label>
-                            <input asp-for="ExpectedDuration" class="form-control" placeholder="e.g., 5 days" />
+                            <label asp-for="ExpectedDuration" class="form-label">المدة المتوقعة</label>
+                            <input asp-for="ExpectedDuration" class="form-control" placeholder="مثال: 5 أيام" />
                             <span asp-validation-for="ExpectedDuration" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Priority" class="form-label"></label>
+                            <label asp-for="Priority" class="form-label">الأولوية</label>
                             <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<PriorityLevel>()"></select>
                             <span asp-validation-for="Priority" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Status" class="form-label"></label>
+                            <label asp-for="Status" class="form-label">الحالة</label>
                             <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()"></select>
                             <span asp-validation-for="Status" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Create Task</button>
-                        <a asp-action="Tasks" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> إنشاء المهمة</button>
+                        <a asp-action="Tasks" class="btn btn-outline-secondary">إلغاء</a>
                     </div>
                 </form>
             </div>

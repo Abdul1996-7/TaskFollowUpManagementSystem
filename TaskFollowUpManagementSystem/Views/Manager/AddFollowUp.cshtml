@@ -1,17 +1,19 @@
 @model CreateFollowUpViewModel
 @{
-    ViewData["Title"] = "Add Follow-Up";
+    ViewData["Title"] = "إضافة متابعة";
 }
 
-<h2 class="mb-4"><i class="bi bi-chat-dots"></i> Add Follow-Up</h2>
+<div class="page-header">
+    <h2><i class="bi bi-chat-dots"></i> إضافة متابعة</h2>
+</div>
 
 <div class="row">
     <div class="col-md-8">
         <div class="card shadow">
             <div class="card-body p-4">
                 <div class="alert alert-info">
-                    <strong>Task:</strong> @Model.TaskTitle<br />
-                    <strong>Employee:</strong> @Model.EmployeeName
+                    <strong>المهمة:</strong> @Model.TaskTitle<br />
+                    <strong>الموظف:</strong> @Model.EmployeeName
                 </div>
 
                 <form asp-action="AddFollowUp" method="post">
@@ -19,20 +21,20 @@
                     <input type="hidden" asp-for="TaskItemId" />
 
                     <div class="mb-3">
-                        <label asp-for="FollowUpDate" class="form-label"></label>
+                        <label asp-for="FollowUpDate" class="form-label">تاريخ المتابعة</label>
                         <input asp-for="FollowUpDate" type="date" class="form-control" />
                         <span asp-validation-for="FollowUpDate" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Note" class="form-label"></label>
-                        <textarea asp-for="Note" class="form-control" rows="5" placeholder="Write your follow-up note..."></textarea>
+                        <label asp-for="Note" class="form-label">ملاحظة المتابعة</label>
+                        <textarea asp-for="Note" class="form-control" rows="5" placeholder="اكتب ملاحظة المتابعة هنا..."></textarea>
                         <span asp-validation-for="Note" class="text-danger"></span>
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i> Send Follow-Up</button>
-                        <a asp-action="TaskDetails" asp-route-id="@Model.TaskItemId" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i> إرسال المتابعة</button>
+                        <a asp-action="TaskDetails" asp-route-id="@Model.TaskItemId" class="btn btn-outline-secondary">إلغاء</a>
                     </div>
                 </form>
             </div>

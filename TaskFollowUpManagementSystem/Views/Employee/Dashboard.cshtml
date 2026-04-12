@@ -1,35 +1,37 @@
 @model EmployeeDashboardViewModel
 @{
-    ViewData["Title"] = "Employee Dashboard";
+    ViewData["Title"] = "لوحة تحكم الموظف";
 }
 
-<h2 class="mb-4"><i class="bi bi-speedometer2"></i> My Dashboard</h2>
+<div class="page-header">
+    <h2><i class="bi bi-speedometer2"></i> لوحة التحكم</h2>
+</div>
 
 <div class="row g-4 mb-4">
     <div class="col-md-4">
-        <div class="card bg-primary text-white shadow h-100">
+        <div class="card stat-card bg-primary text-white shadow h-100">
             <div class="card-body text-center">
-                <i class="bi bi-list-task" style="font-size: 2.5rem;"></i>
-                <h3 class="mt-2">@Model.AssignedTasks</h3>
-                <p class="mb-0">Active Tasks</p>
+                <div class="stat-icon"><i class="bi bi-list-task"></i></div>
+                <div class="stat-number">@Model.AssignedTasks</div>
+                <p class="stat-label">المهام النشطة</p>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-warning text-dark shadow h-100">
+        <div class="card stat-card bg-warning text-dark shadow h-100">
             <div class="card-body text-center">
-                <i class="bi bi-chat-dots" style="font-size: 2.5rem;"></i>
-                <h3 class="mt-2">@Model.PendingFollowUps</h3>
-                <p class="mb-0">Pending Follow-Ups</p>
+                <div class="stat-icon"><i class="bi bi-chat-dots"></i></div>
+                <div class="stat-number">@Model.PendingFollowUps</div>
+                <p class="stat-label">متابعات بانتظار الرد</p>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-success text-white shadow h-100">
+        <div class="card stat-card bg-success text-white shadow h-100">
             <div class="card-body text-center">
-                <i class="bi bi-check-circle" style="font-size: 2.5rem;"></i>
-                <h3 class="mt-2">@Model.CompletedTasks</h3>
-                <p class="mb-0">Completed Tasks</p>
+                <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+                <div class="stat-number">@Model.CompletedTasks</div>
+                <p class="stat-label">المهام المكتملة</p>
             </div>
         </div>
     </div>
@@ -39,8 +41,8 @@
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-clock"></i> Upcoming Deadlines</h5>
-                <a asp-action="MyTasks" class="btn btn-sm btn-outline-primary">View All</a>
+                <h5 class="mb-0"><i class="bi bi-clock"></i> المواعيد النهائية القادمة</h5>
+                <a asp-action="MyTasks" class="btn btn-sm btn-outline-primary">عرض الكل</a>
             </div>
             <div class="card-body p-0">
                 @if (Model.UpcomingDeadlines.Any())
@@ -52,20 +54,20 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <strong>@deadline.Title</strong><br />
-                                        <small class="text-muted">Due: @deadline.DueDate.ToString("MMM dd, yyyy")</small>
+                                        <small class="text-muted">الاستحقاق: @deadline.DueDate.ToString("yyyy/MM/dd")</small>
                                     </div>
                                     <div>
                                         @if (deadline.DaysRemaining <= 1)
                                         {
-                                            <span class="badge bg-danger">@deadline.DaysRemaining day(s)</span>
+                                            <span class="badge bg-danger">@deadline.DaysRemaining يوم</span>
                                         }
                                         else if (deadline.DaysRemaining <= 3)
                                         {
-                                            <span class="badge bg-warning text-dark">@deadline.DaysRemaining days</span>
+                                            <span class="badge bg-warning text-dark">@deadline.DaysRemaining أيام</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-info">@deadline.DaysRemaining days</span>
+                                            <span class="badge bg-info">@deadline.DaysRemaining أيام</span>
                                         }
                                     </div>
                                 </div>
@@ -75,7 +77,10 @@
                 }
                 else
                 {
-                    <p class="text-muted text-center p-3">No upcoming deadlines.</p>
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="bi bi-clock"></i></div>
+                        <div class="empty-title">لا توجد مواعيد نهائية قادمة</div>
+                    </div>
                 }
             </div>
         </div>
@@ -84,7 +89,7 @@
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="bi bi-list-task"></i> Recent Tasks</h5>
+                <h5 class="mb-0"><i class="bi bi-list-task"></i> آخر المهام</h5>
             </div>
             <div class="card-body p-0">
                 @if (Model.RecentTasks.Any())
@@ -120,7 +125,10 @@
                 }
                 else
                 {
-                    <p class="text-muted text-center p-3">No tasks assigned yet.</p>
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="bi bi-list-task"></i></div>
+                        <div class="empty-title">لا توجد مهام مسندة بعد</div>
+                    </div>
                 }
             </div>
         </div>

@@ -1,8 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "الصفحة الرئيسية";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center py-5">
+    <div class="mb-4">
+        <i class="bi bi-clipboard-check" style="font-size: 4rem; color: var(--bs-primary);"></i>
+    </div>
+    <h1 class="display-4 fw-bold mb-3">نظام متابعة المهام</h1>
+    <p class="lead text-muted mb-4">نظام متكامل لإدارة المهام ومتابعة سير العمل بين المدراء والموظفين</p>
+    <div class="d-flex justify-content-center gap-3">
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg px-4">
+            <i class="bi bi-box-arrow-in-left"></i> تسجيل الدخول
+        </a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-lg px-4">
+            <i class="bi bi-person-plus"></i> إنشاء حساب
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mt-4">
+    <div class="col-md-4">
+        <div class="card shadow h-100 text-center p-4">
+            <div class="card-body">
+                <i class="bi bi-list-task" style="font-size: 2.5rem; color: var(--bs-primary);"></i>
+                <h5 class="mt-3">إدارة المهام</h5>
+                <p class="text-muted">إنشاء وتعيين ومتابعة المهام بسهولة مع تحديد الأولويات والمواعيد النهائية</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow h-100 text-center p-4">
+            <div class="card-body">
+                <i class="bi bi-chat-dots" style="font-size: 2.5rem; color: var(--bs-info);"></i>
+                <h5 class="mt-3">المتابعات</h5>
+                <p class="text-muted">نظام متابعة متكامل يربط بين المدراء والموظفين لضمان إنجاز المهام</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow h-100 text-center p-4">
+            <div class="card-body">
+                <i class="bi bi-graph-up" style="font-size: 2.5rem; color: var(--bs-success);"></i>
+                <h5 class="mt-3">التقارير</h5>
+                <p class="text-muted">لوحات تحكم وتقارير تفصيلية لمتابعة أداء الفريق ونسب الإنجاز</p>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,22 +1,24 @@
 @model TaskListViewModel
 @{
-    ViewData["Title"] = "My Tasks";
+    ViewData["Title"] = "مهامي";
 }
 
-<h2 class="mb-4"><i class="bi bi-list-task"></i> My Tasks</h2>
+<div class="page-header">
+    <h2><i class="bi bi-list-task"></i> مهامي</h2>
+</div>
 
-<!-- Filters -->
-<div class="card shadow mb-4">
+<!-- الفلاتر -->
+<div class="card shadow mb-4 filter-card">
     <div class="card-body">
         <form method="get" asp-action="MyTasks" class="row g-3 align-items-end">
             <div class="col-md-4">
-                <label class="form-label">Search</label>
-                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search tasks..." />
+                <label class="form-label">بحث</label>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="ابحث في المهام..." />
             </div>
             <div class="col-md-3">
-                <label class="form-label">Priority</label>
+                <label class="form-label">الأولوية</label>
                 <select name="priority" class="form-select">
-                    <option value="">All Priorities</option>
+                    <option value="">جميع الأولويات</option>
                     @foreach (PriorityLevel p in Enum.GetValues(typeof(PriorityLevel)))
                     {
                         <option value="@((int)p)" selected="@(Model.PriorityFilter == p)">@p</option>
@@ -24,9 +26,9 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Status</label>
+                <label class="form-label">الحالة</label>
                 <select name="status" class="form-select">
-                    <option value="">All Statuses</option>
+                    <option value="">جميع الحالات</option>
                     @foreach (TaskStatusEnum s in Enum.GetValues(typeof(TaskStatusEnum)))
                     {
                         <option value="@((int)s)" selected="@(Model.StatusFilter == s)">@s</option>
@@ -34,24 +36,24 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Filter</button>
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> بحث</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Task Table -->
+<!-- جدول المهام -->
 <div class="card shadow">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Title</th>
-                        <th>Due Date</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>العنوان</th>
+                        <th>تاريخ الاستحقاق</th>
+                        <th>الأولوية</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,10 +66,10 @@
                                     <a asp-action="TaskDetails" asp-route-id="@task.TaskId" class="text-decoration-none fw-bold">@task.Title</a>
                                 </td>
                                 <td>
-                                    @task.DueDate.ToString("MMM dd, yyyy")
+                                    @task.DueDate.ToString("yyyy/MM/dd")
                                     @if (task.IsOverdue)
                                     {
-                                        <span class="badge bg-danger ms-1">Overdue</span>
+                                        <span class="badge bg-danger">متأخرة</span>
                                     }
                                 </td>
                                 <td>
@@ -101,8 +103,8 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a asp-action="TaskDetails" asp-route-id="@task.TaskId" class="btn btn-outline-primary" title="Details"><i class="bi bi-eye"></i></a>
-                                        <a asp-action="UpdateStatus" asp-route-id="@task.TaskId" class="btn btn-outline-success" title="Update Status"><i class="bi bi-pencil-square"></i></a>
+                                        <a asp-action="TaskDetails" asp-route-id="@task.TaskId" class="btn btn-outline-primary" title="التفاصيل"><i class="bi bi-eye"></i></a>
+                                        <a asp-action="UpdateStatus" asp-route-id="@task.TaskId" class="btn btn-outline-success" title="تحديث الحالة"><i class="bi bi-pencil-square"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -110,7 +112,15 @@
                     }
                     else
                     {
-                        <tr><td colspan="5" class="text-center text-muted py-4">No tasks found.</td></tr>
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div class="empty-icon"><i class="bi bi-clipboard-x"></i></div>
+                                    <div class="empty-title">لا توجد مهام</div>
+                                    <div class="empty-text">لم يتم العثور على مهام مطابقة</div>
+                                </div>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -125,7 +135,7 @@
             <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
                 <a class="page-link" asp-action="MyTasks" asp-route-page="@(Model.CurrentPage - 1)"
                    asp-route-search="@Model.SearchTerm" asp-route-priority="@Model.PriorityFilter"
-                   asp-route-status="@Model.StatusFilter">Previous</a>
+                   asp-route-status="@Model.StatusFilter">السابق</a>
             </li>
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
@@ -138,7 +148,7 @@
             <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
                 <a class="page-link" asp-action="MyTasks" asp-route-page="@(Model.CurrentPage + 1)"
                    asp-route-search="@Model.SearchTerm" asp-route-priority="@Model.PriorityFilter"
-                   asp-route-status="@Model.StatusFilter">Next</a>
+                   asp-route-status="@Model.StatusFilter">التالي</a>
             </li>
         </ul>
     </nav>

@@ -1,55 +1,56 @@
 @model RegisterViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "إنشاء حساب";
 }
 
 <div class="row justify-content-center mt-5">
     <div class="col-md-6">
-        <div class="card shadow">
+        <div class="card auth-card shadow">
             <div class="card-header bg-primary text-white text-center">
-                <h4><i class="bi bi-person-plus"></i> Create Account</h4>
+                <i class="bi bi-person-plus"></i>
+                <h4>إنشاء حساب جديد</h4>
             </div>
             <div class="card-body p-4">
                 <form asp-action="Register" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-3">
-                        <label asp-for="FullName" class="form-label"></label>
-                        <input asp-for="FullName" class="form-control" />
+                        <label asp-for="FullName" class="form-label">الاسم الكامل</label>
+                        <input asp-for="FullName" class="form-control" placeholder="أدخل الاسم الكامل" />
                         <span asp-validation-for="FullName" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" />
+                        <label asp-for="Email" class="form-label">البريد الإلكتروني</label>
+                        <input asp-for="Email" class="form-control" placeholder="أدخل البريد الإلكتروني" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Department" class="form-label"></label>
-                        <input asp-for="Department" class="form-control" />
+                        <label asp-for="Department" class="form-label">القسم</label>
+                        <input asp-for="Department" class="form-control" placeholder="أدخل اسم القسم" />
                         <span asp-validation-for="Department" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Password" class="form-label"></label>
-                        <input asp-for="Password" class="form-control" />
+                        <label asp-for="Password" class="form-label">كلمة المرور</label>
+                        <input asp-for="Password" class="form-control" placeholder="أدخل كلمة المرور" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="ConfirmPassword" class="form-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <label asp-for="ConfirmPassword" class="form-label">تأكيد كلمة المرور</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="أعد إدخال كلمة المرور" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-person-plus"></i> Register</button>
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-person-plus"></i> إنشاء الحساب</button>
                 </form>
 
                 <hr />
                 <div class="text-center">
-                    <p class="mb-1">Already have an account?</p>
-                    <a asp-action="Login" class="btn btn-outline-secondary btn-sm">Login</a>
+                    <p class="mb-1">لديك حساب بالفعل؟</p>
+                    <a asp-action="Login" class="btn btn-outline-secondary btn-sm">تسجيل الدخول</a>
                 </div>
             </div>
         </div>

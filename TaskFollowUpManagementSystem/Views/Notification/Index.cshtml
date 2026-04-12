@@ -1,14 +1,14 @@
 @model List<Notification>
 @{
-    ViewData["Title"] = "Notifications";
+    ViewData["Title"] = "الإشعارات";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-bell"></i> Notifications</h2>
+<div class="page-header">
+    <h2><i class="bi bi-bell"></i> الإشعارات</h2>
     @if (Model.Any(n => !n.IsRead))
     {
         <form asp-action="MarkAllAsRead" method="post">
-            <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-check-all"></i> Mark All as Read</button>
+            <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-check-all"></i> تعليم الكل كمقروء</button>
         </form>
     }
 </div>
@@ -35,14 +35,14 @@
                     <div class="list-group-item @bgClass">
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex align-items-start">
-                                <i class="bi @iconClass me-3" style="font-size: 1.3rem; margin-top: 2px;"></i>
+                                <i class="bi @iconClass ms-3" style="font-size: 1.3rem; margin-top: 2px;"></i>
                                 <div>
                                     <p class="mb-1 @(notification.IsRead ? "text-muted" : "fw-bold")">@notification.Message</p>
                                     <small class="text-muted">
-                                        @notification.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                                        @notification.CreatedAt.ToString("yyyy/MM/dd HH:mm")
                                         @if (notification.TaskItem != null)
                                         {
-                                            <text> &middot; Task: @notification.TaskItem.Title</text>
+                                            <text> &middot; المهمة: @notification.TaskItem.Title</text>
                                         }
                                     </small>
                                 </div>
@@ -50,7 +50,7 @@
                             @if (!notification.IsRead)
                             {
                                 <form asp-action="MarkAsRead" asp-route-id="@notification.NotificationId" method="post">
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary" title="Mark as read">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" title="تعليم كمقروء">
                                         <i class="bi bi-check"></i>
                                     </button>
                                 </form>
@@ -62,9 +62,10 @@
         }
         else
         {
-            <div class="text-center py-5 text-muted">
-                <i class="bi bi-bell-slash" style="font-size: 3rem;"></i>
-                <p class="mt-2">No notifications yet.</p>
+            <div class="empty-state">
+                <div class="empty-icon"><i class="bi bi-bell-slash"></i></div>
+                <div class="empty-title">لا توجد إشعارات</div>
+                <div class="empty-text">لم تصلك أي إشعارات بعد</div>
             </div>
         }
     </div>

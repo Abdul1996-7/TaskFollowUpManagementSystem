@@ -1,18 +1,29 @@
 @model AssignRoleViewModel
 @{
-    ViewData["Title"] = "Assign Role";
+    ViewData["Title"] = "تعيين دور";
 }
 
-<h2 class="mb-4"><i class="bi bi-person-gear"></i> Assign Role</h2>
+<div class="page-header">
+    <h2><i class="bi bi-person-gear"></i> تعيين دور المستخدم</h2>
+</div>
 
 <div class="row">
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <strong>User:</strong> @Model.FullName<br />
-                    <strong>Email:</strong> @Model.Email<br />
-                    <strong>Current Role:</strong> <span class="badge bg-secondary">@Model.CurrentRole</span>
+                    <div class="info-row">
+                        <span class="info-label">المستخدم:</span>
+                        <span class="info-value"><strong>@Model.FullName</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">البريد الإلكتروني:</span>
+                        <span class="info-value">@Model.Email</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">الدور الحالي:</span>
+                        <span class="info-value"><span class="badge bg-secondary">@Model.CurrentRole</span></span>
+                    </div>
                 </div>
                 <hr />
                 <form asp-action="AssignRole" method="post">
@@ -22,18 +33,18 @@
                     <input type="hidden" asp-for="CurrentRole" />
 
                     <div class="mb-3">
-                        <label asp-for="NewRole" class="form-label">New Role</label>
+                        <label asp-for="NewRole" class="form-label">الدور الجديد</label>
                         <select asp-for="NewRole" class="form-select">
-                            <option value="Admin" selected="@(Model.CurrentRole == "Admin")">Admin</option>
-                            <option value="Manager" selected="@(Model.CurrentRole == "Manager")">Manager</option>
-                            <option value="Employee" selected="@(Model.CurrentRole == "Employee")">Employee</option>
+                            <option value="Admin" selected="@(Model.CurrentRole == "Admin")">مدير النظام</option>
+                            <option value="Manager" selected="@(Model.CurrentRole == "Manager")">مدير</option>
+                            <option value="Employee" selected="@(Model.CurrentRole == "Employee")">موظف</option>
                         </select>
                         <span asp-validation-for="NewRole" class="text-danger"></span>
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Update Role</button>
-                        <a asp-action="Users" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> تحديث الدور</button>
+                        <a asp-action="Users" class="btn btn-outline-secondary">إلغاء</a>
                     </div>
                 </form>
             </div>

@@ -1,22 +1,24 @@
 @model RespondFollowUpViewModel
 @{
-    ViewData["Title"] = "Respond to Follow-Up";
+    ViewData["Title"] = "الرد على المتابعة";
 }
 
-<h2 class="mb-4"><i class="bi bi-reply"></i> Respond to Follow-Up</h2>
+<div class="page-header">
+    <h2><i class="bi bi-reply"></i> الرد على المتابعة</h2>
+</div>
 
 <div class="row">
     <div class="col-md-8">
         <div class="card shadow">
             <div class="card-body p-4">
                 <div class="alert alert-info">
-                    <strong>Task:</strong> @Model.TaskTitle<br />
-                    <strong>Manager:</strong> @Model.ManagerName<br />
-                    <strong>Follow-Up Date:</strong> @Model.FollowUpDate.ToString("MMM dd, yyyy")
+                    <strong>المهمة:</strong> @Model.TaskTitle<br />
+                    <strong>المدير:</strong> @Model.ManagerName<br />
+                    <strong>تاريخ المتابعة:</strong> @Model.FollowUpDate.ToString("yyyy/MM/dd")
                 </div>
 
-                <div class="border rounded p-3 mb-4 bg-light">
-                    <strong><i class="bi bi-chat-left-text"></i> Manager's Note:</strong>
+                <div class="followup-thread mb-4">
+                    <strong><i class="bi bi-chat-left-text"></i> ملاحظة المدير:</strong>
                     <p class="mt-2 mb-0">@Model.Note</p>
                 </div>
 
@@ -29,14 +31,14 @@
                     <input type="hidden" asp-for="Note" />
 
                     <div class="mb-3">
-                        <label asp-for="EmployeeResponse" class="form-label"></label>
-                        <textarea asp-for="EmployeeResponse" class="form-control" rows="5" placeholder="Type your response here..."></textarea>
+                        <label asp-for="EmployeeResponse" class="form-label">ردك</label>
+                        <textarea asp-for="EmployeeResponse" class="form-control" rows="5" placeholder="اكتب ردك هنا..."></textarea>
                         <span asp-validation-for="EmployeeResponse" class="text-danger"></span>
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i> Submit Response</button>
-                        <a asp-action="FollowUps" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i> إرسال الرد</button>
+                        <a asp-action="FollowUps" class="btn btn-outline-secondary">إلغاء</a>
                     </div>
                 </form>
             </div>
